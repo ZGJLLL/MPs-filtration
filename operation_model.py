@@ -224,12 +224,19 @@ class Retention(object):
                         "Chinese": "不同浓度QAS-CNF-AG对PS(+)的保留率"}
     title_QAS_PS = {"English": "Retention(%) of PS by QAS-CNF-AG at different concentrations",
                     "Chinese": "不同浓度QAS-CNF-AG对PS的保留率"}
+    title_PS = {"English": "PS were captured by TO/QAS-CNF-AG filtration",
+                   "Chinese": "通过TO/QAS-CNF-AG过滤捕获PS"}
+    title_PS_COOH = {"English": "PS(-) were captured by TO/QAS-CNF-AG filtration",
+                 "Chinese": "通过TO/QAS-CNF-AG过滤捕获PS(-)"}
+    title_PS_NH2 = {"English": "PS(+) were captured by TO/QAS-CNF-AG filtration",
+                   "Chinese": "通过TO/QAS-CNF-AG过滤捕获PS(+)"}
 
     title_list = [title_PS_TEMPO, title_PS_COOH_TEMPO, title_PS_NH2_TEMPO,
                   title_PS_QAS, title_PS_COOH_QAS, title_PS_NH2_QAS,
                   title_TEMPO, title_QAS,
                   title_TEMPO_PS, title_TEMPO_PS_COOH, title_TEMPO_PS_NH2,
-                  title_QAS_PS, title_QAS_PS_COOH, title_QAS_PS_NH2]
+                  title_QAS_PS, title_QAS_PS_COOH, title_QAS_PS_NH2,
+                  title_PS, title_PS_COOH, title_PS_NH2]
     err_attr = {"elinewidth": 2, "capsize": 6}
 
     @classmethod
@@ -272,6 +279,12 @@ class Retention(object):
                 plt.title(cls.title_list[12][key], fontdict={"family": "Microsoft YaHei", "size": 22})
             elif kind == "QAS-amino":
                 plt.title(cls.title_list[13][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "null":
+                plt.title(cls.title_list[14][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "carboxyl":
+                plt.title(cls.title_list[15][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "amino":
+                plt.title(cls.title_list[16][key], fontdict={"family": "Microsoft YaHei", "size": 22})
             else:
                 print("请输入正确信息！")
                 return

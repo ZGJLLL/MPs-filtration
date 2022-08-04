@@ -117,8 +117,8 @@ class Filtration(object):
             ind += 1
             if kind:
                 if save:
-                    save_path = "".join(["D:\\ZGJ\\SR_DATA\\", save, "\\%d.xlsx" % c0[i]])
-                    retention_table = pd.DataFrame(retention)
+                    save_path = "".join(["D:\\ZGJ\\SR_DATA\\", save, "\\%dppm.xlsx" % c0[i]])
+                    retention_table = pd.DataFrame(mini_retention)
                     retention_table.to_excel(save_path)
 
         return retention
@@ -146,4 +146,4 @@ if __name__ == "__main__":
     c3[0].append(6.28)
     c = c1 + c2 + c3
     print(c)
-    Retention.plastic_kind_plot_retention(["PS(+)", "PS(-)", "PS"], c, "TEMPO", "English", ["PS(+)", "PS(-)", "PS"], save="sss.png")
+    Retention.plot_retention(["PS(+)", "PS(-)", "PS"], c, "TEMPO", "English", ["PS(+)", "PS(-)", "PS"], save="sss.png")
