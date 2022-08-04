@@ -196,143 +196,44 @@ class Microplastic(object):
 
 
 class Retention(object):
-    title_PS_COOH_TEMPO = {"English": "Retention of PS(-) by TO-CNF-AG at different concentrations",
-                        "Chinese": "CNF-AG去除PSNPs(-)的动力学一阶拟合数据曲线"}
-    title_PS_NH2_TEMPO = {"English": "Retention of PS(+) by TO-CNF-AG at different concentrations",
-                    "Chinese": "CNF-AG去除PSNPs(+)的动力学一阶拟合数据曲线"}
-    title_PS_TEMPO = {"English": "Retention of PS by TO-CNF-AG at different concentrations",
-                "Chinese": "CNF-AG去除PSNPs的动力学一阶拟合数据曲线"}
-    title_PS_COOH_QAS = {"English": "Retention of PS(-) by QAS-CNF-AG at different concentrations",
-                           "Chinese": "CNF-AG去除PSNPs(-)的动力学一阶拟合数据曲线"}
-    title_PS_NH2_QAS = {"English": "Retention of PS(+) by QAS-CNF-AG at different concentrations",
-                          "Chinese": "CNF-AG去除PSNPs(+)的动力学一阶拟合数据曲线"}
-    title_PS_QAS = {"English": "Retention of PS by QAS-CNF-AG at different concentrations",
-                      "Chinese": "CNF-AG去除PSNPs的动力学一阶拟合数据曲线"}
+    title_PS_COOH_TEMPO = {"English": "Retention(%) of TO-CNF-AG for different concentrations of PS(-)",
+                        "Chinese": "TO-CNF-AG对不同浓度PS(-)的保留率"}
+    title_PS_NH2_TEMPO = {"English": "Retention(%) of TO-CNF-AG for different concentrations of PS(+)",
+                    "Chinese": "TO-CNF-AG对不同浓度PS(+)的保留率"}
+    title_PS_TEMPO = {"English": "Retention(%) of TO-CNF-AG for different concentrations of PS",
+                "Chinese": "TO-CNF-AG对不同浓度PS的保留率"}
+    title_PS_COOH_QAS = {"English": "Retention(%) of QAS-CNF-AG for different concentrations of PS(-)",
+                           "Chinese": "QAS-CNF-AG对不同浓度PS(-)的保留率"}
+    title_PS_NH2_QAS = {"English": "Retention(%) of QAS-CNF-AG for different concentrations of PS(+)",
+                          "Chinese": "QAS-CNF-AG对不同浓度PS(+)的保留率"}
+    title_PS_QAS = {"English": "Retention(%) of QAS-CNF-AG for different concentrations of PS",
+                      "Chinese": "QAS-CNF-AG对不同浓度PS的保留率"}
     title_TEMPO = {"English": "PS/PS(-)/PS(+) were captured by TO-CNF-AG filtration",
-                          "Chinese": "CNF-AG去除PSNPs(-)的动力学粒子内扩散拟合数据曲线"}
+                          "Chinese": "通过TO-CNF-AG过滤捕获PS/PS(-)/PS(+)"}
     title_QAS = {"English": "PS/PS(-)/PS(+) were captured by QAS-CNF-AG filtration",
-                        "Chinese": "CNF-AG去除PSNPs(-)的动力学二阶拟合数据曲线"}
+                        "Chinese": "通过QAS-CNF-AG过滤捕获PS/PS(-)/PS(+)"}
+    title_TEMPO_PS_COOH = {"English": "Retention(%) of PS(-) by TO-CNF-AG at different concentrations",
+                        "Chinese": "不同浓度TO-CNF-AG对PS(-)的保留率"}
+    title_TEMPO_PS_NH2 = {"English": "Retention(%) of PS(+) by TO-CNF-AG at different concentrations",
+                    "Chinese": "不同浓度TO-CNF-AG对PS(+)的保留率"}
+    title_TEMPO_PS = {"English": "Retention(%) of PS by TO-CNF-AG at different concentrations",
+                "Chinese": "不同浓度TO-CNF-AG对PS的保留率"}
+    title_QAS_PS_COOH = {"English": "Retention(%) of PS(-) by QAS-CNF-AG at different concentrations",
+                         "Chinese": "不同浓度QAS-CNF-AG对PS(-)的保留率"}
+    title_QAS_PS_NH2 = {"English": "Retention(%) of PS(+) by QAS-CNF-AG at different concentrations",
+                        "Chinese": "不同浓度QAS-CNF-AG对PS(+)的保留率"}
+    title_QAS_PS = {"English": "Retention(%) of PS by QAS-CNF-AG at different concentrations",
+                    "Chinese": "不同浓度QAS-CNF-AG对PS的保留率"}
 
     title_list = [title_PS_TEMPO, title_PS_COOH_TEMPO, title_PS_NH2_TEMPO,
                   title_PS_QAS, title_PS_COOH_QAS, title_PS_NH2_QAS,
-                  title_TEMPO, title_QAS]
+                  title_TEMPO, title_QAS,
+                  title_TEMPO_PS, title_TEMPO_PS_COOH, title_TEMPO_PS_NH2,
+                  title_QAS_PS, title_QAS_PS_COOH, title_QAS_PS_NH2]
     err_attr = {"elinewidth": 2, "capsize": 6}
 
     @classmethod
-    def plastic_concentration_plot_retention(cls, ppm:list, retention:list, kind:str, key:str, labels:list, save=None):
-        """
-        微纳塑料溶液浓度是变量，其余都是常量固定
-        ① 同一种气凝胶：相同的带电与相同的CNF浓度
-        ② 同一种微纳塑料：微纳塑料的种类与带电是同一种
-        ③ 不同浓度：同一种微纳塑料的不同浓度溶液
-        :param ppm: 微纳塑料溶液的初始浓度梯度
-        :param retention: 对应微纳塑料溶液的初始浓度梯度进行过滤后得到的截留率
-                          一般每种浓度进行两次过滤实验，故retention是二维列表
-        :param kind: 微纳塑料的某个类别如 PS/PS(-)/PS(+)
-        :param key: English or Chinese
-        :param labels: 图例标签，实际上对应ppm
-        :param save: 图保存路径与格式
-        :return:
-        """
-        with plt.style.context(['science', 'nature', 'no-latex']):
-            fig = plt.figure(figsize=(12, 10), dpi=180)
-            bar_line = []
-            for i in range(len(retention)):
-                mini_retention = sorted(retention[i], reverse=True)
-                y_err = np.std(mini_retention, ddof=1)
-                line = plt.bar(i, mini_retention[len(mini_retention) - 1], yerr=y_err, error_kw=cls.err_attr, width=0.2)
-                bar_line.append(line)
-
-            plt.xticks([i for i in range(len(ppm))], [(i + 1) for i in range(len(ppm))])
-            if "null-TEMPO" == "".join([kind, "-TEMPO"]):
-                plt.title(cls.title_list[0][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif "carboxyl-TEMPO" == "".join([kind, "-TEMPO"]):
-                plt.title(cls.title_list[1][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif "amino-TEMPO" == "".join([kind, "-TEMPO"]):
-                plt.title(cls.title_list[2][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif "null-QAS" == "".join([kind, "-QAS"]):
-                plt.title(cls.title_list[3][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif "carboxyl-QAS" == "".join([kind, "-QAS"]):
-                plt.title(cls.title_list[4][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif "amino-QAS" == "".join([kind, "-QAS"]):
-                plt.title(cls.title_list[5][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif kind == "TEMPO":
-                plt.title(cls.title_list[6][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif kind == "QAS":
-                plt.title(cls.title_list[7][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            else:
-                print("请输入正确信息！")
-                return
-
-            plt.ylabel("Retention rate(%)", size=22)
-
-            ax = plt.gca()  # 获得坐标轴的句柄
-            ax.xaxis.set_ticks_position('bottom')
-            ax.spines['bottom'].set_position(('data', 0))
-            ax.spines['bottom'].set_linewidth(1.5)  # 设置底部坐标轴的粗细
-            ax.spines['left'].set_linewidth(1.5)  # 设置左边坐标轴的粗细
-            ax.spines['right'].set_linewidth(1.5)  # 设置右边坐标轴的粗细
-            ax.spines['top'].set_linewidth(1.5)  #
-            plt.minorticks_on()
-            plt.tick_params(which='minor', direction='in', bottom=False, left=False, right=False, width=1, length=3)
-            plt.tick_params(direction='out', bottom=False, right=False, left=False, width=1, length=6, labelsize=22)
-            plt.ylim(0, 100)
-            plt.legend(bar_line, labels=labels, loc=0, edgecolor='#000000', prop={'size': 22})
-            if save:
-                plt.savefig(save)
-            plt.show()
-
-    @classmethod
-    def AG_concentration_plot_retention(cls, AG_concentration, retention:list, kind, key, labels, save=None):
-        with plt.style.context(['science', 'nature', 'no-latex']):
-            fig = plt.figure(figsize=(12, 10), dpi=180)
-            bar_line = []
-            for i in range(len(AG_concentration)):
-                for j in range(len(retention[i])):
-                    mini_retention = sorted(retention[i], reverse=True)
-                    line = plt.bar(i, mini_retention[j], width=0.2)
-                    bar_line.append(line)
-
-            plt.xticks([i for i in range(len(AG_concentration))], [(i + 1) for i in range(len(AG_concentration))])
-            if "null-TEMPO" == "".join([kind, "-TEMPO"]):
-                plt.title(cls.title_list[0][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif "carboxyl-TEMPO" == "".join([kind, "-TEMPO"]):
-                plt.title(cls.title_list[1][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif "amino-TEMPO" == "".join([kind, "-TEMPO"]):
-                plt.title(cls.title_list[2][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif "null-QAS" == "".join([kind, "-QAS"]):
-                plt.title(cls.title_list[3][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif "carboxyl-QAS" == "".join([kind, "-QAS"]):
-                plt.title(cls.title_list[4][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif "amino-QAS" == "".join([kind, "-QAS"]):
-                plt.title(cls.title_list[5][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif kind == "TEMPO":
-                plt.title(cls.title_list[6][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif kind == "QAS":
-                plt.title(cls.title_list[7][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            else:
-                print("请输入正确信息！")
-                return
-
-            plt.ylabel("Retention rate(%)", size=22)
-
-            ax = plt.gca()  # 获得坐标轴的句柄
-            ax.xaxis.set_ticks_position('bottom')
-            ax.spines['bottom'].set_position(('data', 0))
-            ax.spines['bottom'].set_linewidth(1.5)  # 设置底部坐标轴的粗细
-            ax.spines['left'].set_linewidth(1.5)  # 设置左边坐标轴的粗细
-            ax.spines['right'].set_linewidth(1.5)  # 设置右边坐标轴的粗细
-            ax.spines['top'].set_linewidth(1.5)  #
-            plt.minorticks_on()
-            plt.tick_params(which='minor', direction='in', bottom=False, left=False, right=False, width=1, length=3)
-            plt.tick_params(direction='out', bottom=False, right=False, left=False, width=1, length=6, labelsize=22)
-            plt.ylim(0, 100)
-            plt.legend([bar_line], labels=labels, loc=0, edgecolor='#000000', prop={'size': 22})
-            plt.savefig(save)
-            plt.show()
-
-    @classmethod
-    def plastic_kind_plot_retention(cls, retention:list, kind, key, labels:list, save=None):
+    def plot_retention(cls, retention:list, kind, key, labels:list, save=None):
         with plt.style.context(['science', 'nature', 'no-latex']):
             fig = plt.figure(figsize=(12, 10), dpi=180)
             bar_line = []
@@ -343,22 +244,34 @@ class Retention(object):
                 bar_line.append(line)
 
             plt.xticks([i for i in range(len(labels))], [(i + 1) for i in range(len(labels))])
-            if "null-TEMPO" == "".join([kind, "-TEMPO"]):
+            if kind == "null-TEMPO":
                 plt.title(cls.title_list[0][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif "carboxyl-TEMPO" == "".join([kind, "-TEMPO"]):
+            elif kind == "carboxyl-TEMPO":
                 plt.title(cls.title_list[1][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif "amino-TEMPO" == "".join([kind, "-TEMPO"]):
+            elif kind == "amino-TEMPO":
                 plt.title(cls.title_list[2][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif "null-QAS" == "".join([kind, "-QAS"]):
+            elif kind == "null-QAS":
                 plt.title(cls.title_list[3][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif "carboxyl-QAS" == "".join([kind, "-QAS"]):
+            elif kind == "carboxyl-QAS":
                 plt.title(cls.title_list[4][key], fontdict={"family": "Microsoft YaHei", "size": 22})
-            elif "amino-QAS" == "".join([kind, "-QAS"]):
+            elif kind == "amino-QAS":
                 plt.title(cls.title_list[5][key], fontdict={"family": "Microsoft YaHei", "size": 22})
             elif kind == "TEMPO":
                 plt.title(cls.title_list[6][key], fontdict={"family": "Microsoft YaHei", "size": 22})
             elif kind == "QAS":
                 plt.title(cls.title_list[7][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "TEMPO-null":
+                plt.title(cls.title_list[8][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "TEMPO-carboxyl":
+                plt.title(cls.title_list[9][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "TEMPO-amino":
+                plt.title(cls.title_list[10][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "QAS-null":
+                plt.title(cls.title_list[11][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "QAS-carboxyl":
+                plt.title(cls.title_list[12][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "QAS-amino":
+                plt.title(cls.title_list[13][key], fontdict={"family": "Microsoft YaHei", "size": 22})
             else:
                 print("请输入正确信息！")
                 return

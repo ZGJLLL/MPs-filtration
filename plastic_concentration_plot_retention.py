@@ -5,6 +5,7 @@ from operation_model import Microplastic, Retention
 if __name__ == "__main__":
     grade = "M_1/2st"
     t = "amino"
+    AG = "TEMPO"
     # MPs/NPs
     c = [1, 2, 5, 10, 20, 40, 60, 80]
     c_num = 9
@@ -55,4 +56,4 @@ if __name__ == "__main__":
         path.append(mini_path)
     r = Filtration.retention_rate(path, emission_wavelength, a, b, c, save=retention_data_save, kind=t)
     print(r)
-    Retention.plastic_concentration_plot_retention(c, r, t, "English", c_label)
+    Retention.plot_retention(r, "".join([t, "-", AG]), "English", c_label)

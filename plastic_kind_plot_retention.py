@@ -113,4 +113,4 @@ if __name__ == "__main__":
     r3[0].append(6.28)
     r = r1 + r2 + r3
     print(r)
-    Retention.plastic_kind_plot_retention(r, AG_kind, "English", c_label)
+    Retention.plot_retention(r, AG_kind, "English", c_label)
