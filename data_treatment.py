@@ -6,10 +6,10 @@ from copy import deepcopy as dcp
 from math import log
 from operation_model import Microplastic, Retention
 
-water = pd.read_csv("water.csv").iloc[21::, 1]
-wave_arr = np.array(pd.read_csv("water.csv").iloc[21::, 0], dtype=np.double)
-water_460 = pd.read_csv("water_460.csv").iloc[21::, 1]
-wave_arr_460 = np.array(pd.read_csv("water_460.csv").iloc[21::, 0], dtype=np.double)
+water = pd.read_csv("water.csv").iloc[20::, 1]
+wave_arr = np.array(pd.read_csv("water.csv").iloc[20::, 0], dtype=np.double)
+water_460 = pd.read_csv("water_460.csv").iloc[20::, 1]
+wave_arr_460 = np.array(pd.read_csv("water_460.csv").iloc[20::, 0], dtype=np.double)
 
 
 class Plastic(object):
@@ -50,7 +50,7 @@ class Plastic(object):
         for temp in plastic:
             mini_fic = []
             for i in temp:
-                data = pd.concat([water, pd.read_csv(i).iloc[21::, 1]],
+                data = pd.concat([water, pd.read_csv(i).iloc[20::, 1]],
                                  axis=1, join="outer", ignore_index=True)
                 arr = np.array(data, dtype=np.double)
                 new_arr = np.diff(arr)
@@ -111,39 +111,45 @@ class Filtration(object):
         ind = 0
         for i in range(len(path)):
             for j in range(len(path[i])):
+                if cn[ind] < 0:
+                    cn[ind] = 0
                 mini_retention.append((1 - cn[ind] / c0[i]) * 100)
+                ind += 1
             retention.append(mini_retention)
-            mini_retention = []
-            ind += 1
             if kind:
                 if save:
                     save_path = "".join(["D:\\ZGJ\\SR_DATA\\", save, "\\%dppm.xlsx" % c0[i]])
                     retention_table = pd.DataFrame(mini_retention)
                     retention_table.to_excel(save_path)
+            mini_retention = []
 
         return retention
 
 
 if __name__ == "__main__":
+    # print(water)
+    # print(pd.read_csv("amino/1.csv").iloc[20::, 1])
     data1 = Plastic.plastic_data("amino", path=[["./amino/1.csv"], ["./amino/2.csv"], ["./amino/5.csv"],
                                       ["./amino/10.csv"], ["./amino/20.csv"], ["./amino/40.csv"],
                                       ["./amino/60.csv"], ["./amino/80.csv"]])
-    a1, b1 = Microplastic.plot_fic_lc(data1, 518, 9, [1, 2, 5, 10, 20, 40, 60, 80], "amino", "English", [0, 100], [0, 100])
-    c1 = Filtration.retention_rate([["amino_filtration/TEMPO/1.281%/15ppm.csv"]], 518, a1, b1, [15], save=None, kind="amino")
-    c1[0].append(60.89)
-    # save = "M_1\\2st\\filtration\\20220731\\amino\\", kind = "TEMPO\\1.281%"
-    data2 = Plastic.plastic_data("carboxyl", path=[["./carboxyl/1.csv"], ["./carboxyl/2.csv"], ["./carboxyl/5.csv"],
-                                      ["./carboxyl/10.csv"], ["./carboxyl/20.csv"], ["./carboxyl/40.csv"],
-                                      ["./carboxyl/60.csv"], ["./carboxyl/80.csv"]])
-    a2, b2 = Microplastic.plot_fic_lc(data2, 518, 9, [1, 2, 5, 10, 20, 40, 60, 80], "carboxyl", "English", [0, 100], [0, 100])
-    c2 = Filtration.retention_rate([["carboxyl_filtration/TEMPO/1.281%/15ppm.csv"]], 518, a2, b2, [15], save=None, kind="carboxyl")
-    c2[0].append(12.33)
-    data3 = Plastic.plastic_data("null", path=[["./null/1.csv"], ["./null/2.csv"], ["./null/5.csv"],
-                                      ["./null/10.csv"], ["./null/20.csv"], ["./null/40.csv"],
-                                      ["./null/60.csv"], ["./null/80.csv"]])
-    a3, b3 = Microplastic.plot_fic_lc(data3, 518, 9, [1, 2, 5, 10, 20, 40, 60, 80], "null", "English", [0, 100], [0, 100])
-    c3 = Filtration.retention_rate([["null_filtration/TEMPO/1.281%/15ppm.csv"]], 518, a3, b3, [15], save=None, kind="null")
-    c3[0].append(6.28)
-    c = c1 + c2 + c3
-    print(c)
-    Retention.plot_retention(["PS(+)", "PS(-)", "PS"], c, "TEMPO", "English", ["PS(+)", "PS(-)", "PS"], save="sss.png")
+    print(data1)
+    # print(data1)
+    # a1, b1 = Microplastic.plot_fic_lc(data1, 518, 9, [1, 2, 5, 10, 20, 40, 60, 80], "amino", "English", [0, 100], [0, 100])
+    # c1 = Filtration.retention_rate([["amino_filtration/TEMPO/1.281%/15ppm.csv"]], 518, a1, b1, [15], save=None, kind="amino")
+    # c1[0].append(60.89)
+    # # save = "M_1\\2st\\filtration\\20220731\\amino\\", kind = "TEMPO\\1.281%"
+    # data2 = Plastic.plastic_data("carboxyl", path=[["./carboxyl/1.csv"], ["./carboxyl/2.csv"], ["./carboxyl/5.csv"],
+    #                                   ["./carboxyl/10.csv"], ["./carboxyl/20.csv"], ["./carboxyl/40.csv"],
+    #                                   ["./carboxyl/60.csv"], ["./carboxyl/80.csv"]])
+    # a2, b2 = Microplastic.plot_fic_lc(data2, 518, 9, [1, 2, 5, 10, 20, 40, 60, 80], "carboxyl", "English", [0, 100], [0, 100])
+    # c2 = Filtration.retention_rate([["carboxyl_filtration/TEMPO/1.281%/15ppm.csv"]], 518, a2, b2, [15], save=None, kind="carboxyl")
+    # c2[0].append(12.33)
+    # data3 = Plastic.plastic_data("null", path=[["./null/1.csv"], ["./null/2.csv"], ["./null/5.csv"],
+    #                                   ["./null/10.csv"], ["./null/20.csv"], ["./null/40.csv"],
+    #                                   ["./null/60.csv"], ["./null/80.csv"]])
+    # a3, b3 = Microplastic.plot_fic_lc(data3, 518, 9, [1, 2, 5, 10, 20, 40, 60, 80], "null", "English", [0, 100], [0, 100])
+    # c3 = Filtration.retention_rate([["null_filtration/TEMPO/1.281%/15ppm.csv"]], 518, a3, b3, [15], save=None, kind="null")
+    # c3[0].append(6.28)
+    # c = c1 + c2 + c3
+    # print(c)
+    # Retention.plot_retention(["PS(+)", "PS(-)", "PS"], c, "TEMPO", "English", ["PS(+)", "PS(-)", "PS"], save="sss.png")

@@ -1,25 +1,25 @@
-Labels,EmScan1
-Type,Emission Scan
-Comment,
-Start,470
-Stop,700
-Step,1
-Fixed/Offset,455
-Xaxis,Wavelength
-Yaxis,Counts
-Scan Corr. by File,TRUE
-Corr. by Ref. Det.,TRUE
-Fixed/Offset Corr. by File,FALSE
-Repeats,1
-Dwell Time,0.5
-Lamp,Xenon
-Temp,0
-Scan Polariser,None
-Scan Slit,1.4995272
-Fixed/Offset Polariser,None
-Fixed/Offset Slit,1.4995272
-Detector,Detector 1
-,
+Labels,EmScan7,
+Type,Emission Scan,
+Comment,,
+Start,460.00,
+Stop,700.00,
+Step,1.00,
+Fixed/Offset,455.00,
+Xaxis,Wavelength,
+Yaxis,Counts,
+Scan Corr. by File,True,
+Corr. by Ref. Det.,True,
+Fixed/Offset Corr. by File,False,
+Repeats,1,
+Dwell Time,0.25,
+Lamp,Xenon,
+Temp,0.00,
+Scan Polariser,None,
+Scan Slit,1.4995272,
+Fixed/Offset Polariser,None,
+Fixed/Offset Slit,1.4995272,
+Detector,Detector 1,
+
 470,9.01E+01
 471,9.61E+01
 472,9.51E+01

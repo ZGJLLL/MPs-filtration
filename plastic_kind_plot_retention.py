@@ -81,8 +81,9 @@ if __name__ == "__main__":
     c = [15] # 某种浓度下的微纳塑料溶液
     c_num = 1 # 每种微纳塑料做了一组实验为1，做了两组实验为2
     c_label = ["PS(+)", "PS(-)", "PS"]
-    AG_kind = "TEMPO"
-    AG_concentration = "/1.281%/"
+    AG = "QAS"
+    AG_kind = "QAS/4_1"
+    AG_concentration = "/0.819%/"
     plastic_concentration = "15ppm/"
     # retention_data_save_amino = "".join([grade, "\\filtration\\20220731\\", type1, "\\", AG_kind, AG_concentration])
     # retention_data_save_carboxyl = "".join([grade, "\\filtration\\20220731\\", type2, "\\", AG_kind, AG_concentration])
@@ -91,26 +92,23 @@ if __name__ == "__main__":
     retention_data_save_carboxyl = None
     retention_data_save_null = None
     path1 = []
+    mini_path = []
     for ind in range(c_num):
-        mini_path = []
         mini_path.append("".join([type1, "_filtration/", AG_kind, AG_concentration, plastic_concentration, str(ind + 1), ".csv"]))
-        path1.append(mini_path)
+    path1.append(mini_path)
     path2 = []
+    mini_path = []
     for ind in range(c_num):
-        mini_path = []
         mini_path.append("".join([type2, "_filtration/", AG_kind, AG_concentration, plastic_concentration, str(ind + 1), ".csv"]))
-        path2.append(mini_path)
+    path2.append(mini_path)
     path3 = []
+    mini_path = []
     for ind in range(c_num):
-        mini_path = []
         mini_path.append("".join([type3, "_filtration/", AG_kind, AG_concentration, plastic_concentration, str(ind + 1), ".csv"]))
-        path3.append(mini_path)
+    path3.append(mini_path)
     r1 = Filtration.retention_rate(path1, emission_wavelength_amino, a1, b1, c, save=retention_data_save_amino, kind=type1)
-    r1[0].append(60.89)
     r2 = Filtration.retention_rate(path2, emission_wavelength_carboxyl, a2, b2, c, save=retention_data_save_carboxyl, kind=type2)
-    r2[0].append(12.33)
     r3 = Filtration.retention_rate(path3, emission_wavelength_null, a3, b3, c, save=retention_data_save_null, kind=type3)
-    r3[0].append(6.28)
     r = r1 + r2 + r3
     print(r)
-    Retention.plot_retention(r, AG_kind, "English", c_label)
+    Retention.plot_retention_bar(r, AG, "English", c_label, save="xxx.png")

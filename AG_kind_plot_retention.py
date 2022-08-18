@@ -4,7 +4,7 @@ from operation_model import Microplastic, Retention
 
 if __name__ == "__main__":
     grade = "M_1/2st"
-    t = "amino"
+    t = "carboxyl"
     # MPs/NPs
     c = [1, 2, 5, 10, 20, 40, 60, 80]
     c_num = 9
@@ -41,41 +41,42 @@ if __name__ == "__main__":
     """
     # Retention
     c = [15] # 某种浓度下的微纳塑料溶液
-    c_num = 1 # 每种微纳塑料做了一组实验为1，做了两组实验为2
-    c_label = ["TEMPO", "QAS(8:1)", "QAS(1:4)"]
+    c_num = 2 # 每种微纳塑料做了一组实验为1，做了两组实验为2
+    # c_label = ["TEMPO", "QAS(8:1)", "QAS(4:1)"]
+    c_label = ["QAS(8:1)", "QAS(4:1)"]
+    # c_label = ["TEMPO"]
     AG1 = "TEMPO"
     AG2 = "QAS"
-    AG1_concentration = "/1.281%/"
+    # AG1_concentration = "/1%/"
     AG2_concentration1 = "/0.653%/"
     AG2_concentration2 = "/0.819%/"
     plastic_concentration = "15ppm/"
-    # retention_data_save_TEMPO = "".join([grade, "\\filtration\\20220731\\", t, "\\", AG1, AG_concentration])
-    # retention_data_save_QAS_8_1 = "".join([grade, "\\filtration\\20220731\\", t, "\\", AG2, "\\8_1", AG_concentration])
-    # retention_data_save_QAS_1_4 = "".join([grade, "\\filtration\\20220731\\", t, "\\", AG2, "\\1_4", AG_concentration])
+    # retention_data_save_TEMPO = "".join([grade, "\\filtration\\20220807\\", t, "\\", AG1, AG1_concentration])
+    # retention_data_save_QAS_8_1 = "".join([grade, "\\filtration\\20220807\\", t, "\\", AG2, "\\8_1", AG2_concentration1])
+    # retention_data_save_QAS_4_1 = "".join([grade, "\\filtration\\20220807\\", t, "\\", AG2, "\\4_1", AG2_concentration2])
     retention_data_save_TEMPO = None
     retention_data_save_QAS_8_1 = None
-    retention_data_save_QAS_1_4 = None
-    path1 = []
-    for ind in range(c_num):
-        mini_path = []
-        mini_path.append("".join([t, "_filtration/", AG1, AG1_concentration, plastic_concentration, str(ind + 1), ".csv"]))
-        path1.append(mini_path)
+    retention_data_save_QAS_4_1 = None
+    # path1 = []
+    # mini_path = []
+    # for ind in range(c_num):
+    #     mini_path.append("".join([t, "_filtration/", AG1, AG1_concentration, plastic_concentration, str(ind + 1), ".csv"]))
+    # path1.append(mini_path)
     path2 = []
-    for ind in range(c_num):
-        mini_path = []
+    mini_path = []
+    for ind in range(4):
         mini_path.append("".join([t, "_filtration/", AG2, "/8_1", AG2_concentration1, plastic_concentration, str(ind + 1), ".csv"]))
-        path2.append(mini_path)
+    path2.append(mini_path)
     path3 = []
-    for ind in range(c_num):
-        mini_path = []
-        mini_path.append("".join([t, "_filtration/", AG2, "/1_4", AG2_concentration2, plastic_concentration, str(ind + 1), ".csv"]))
-        path3.append(mini_path)
-    r1 = Filtration.retention_rate(path1, emission_wavelength, a, b, c, save=retention_data_save_TEMPO, kind=t)
-    r1[0].append(60.89)
+    mini_path = []
+    for ind in range(3):
+        mini_path.append("".join([t, "_filtration/", AG2, "/4_1", AG2_concentration2, plastic_concentration, str(ind + 1), ".csv"]))
+    path3.append(mini_path)
+    # r1 = Filtration.retention_rate(path1, emission_wavelength, a, b, c, save=retention_data_save_TEMPO, kind=t)
     r2 = Filtration.retention_rate(path2, emission_wavelength, a, b, c, save=retention_data_save_QAS_8_1, kind=t)
-    r2[0].append(6.28)
-    r3 = Filtration.retention_rate(path3, emission_wavelength, a, b, c, save=retention_data_save_QAS_1_4, kind=t)
-    r3[0].append(12.33)
-    r = r1 + r2 + r3
+    r3 = Filtration.retention_rate(path3, emission_wavelength, a, b, c, save=retention_data_save_QAS_4_1, kind=t)
+    # r = r1 + r2 + r3
+    r = r2 + r3
+    # r = r1
     print(r)
-    Retention.plot_retention(r, t, "English", c_label, save="aaa.png")
+    Retention.plot_retention(r, t, "English", c_label)

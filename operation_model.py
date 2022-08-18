@@ -133,6 +133,7 @@ class Microplastic(object):
 
             cls.line_model.fit(x_arr, y0_arr)
             y0_predict = cls.line_model.predict(x_arr)
+            print(a1, b)
 
             function_str = ""
             if b < 0:
@@ -240,7 +241,7 @@ class Retention(object):
     err_attr = {"elinewidth": 2, "capsize": 6}
 
     @classmethod
-    def plot_retention(cls, retention:list, kind, key, labels:list, save=None):
+    def plot_retention_bar(cls, retention:list, kind, key, labels:list, save=None):
         with plt.style.context(['science', 'nature', 'no-latex']):
             fig = plt.figure(figsize=(12, 10), dpi=180)
             bar_line = []
@@ -303,6 +304,84 @@ class Retention(object):
             plt.tick_params(direction='out', bottom=False, right=False, left=False, width=1, length=6, labelsize=22)
             plt.ylim(0, 100)
             plt.legend(bar_line, labels=labels, loc=0, edgecolor='#000000', prop={'size': 22})
+            if save:
+                plt.savefig(save)
+            plt.show()
+
+    @classmethod
+    def plot_retention_scatter(cls, c0: list, retention: list, kind:str, key, save=None):
+        with plt.style.context(['science', 'nature', 'no-latex']):
+            fig = plt.figure(figsize=(12, 10), dpi=180)
+            labels = []
+            scatter_line = []
+            x_tick = []
+            for i in range(len(retention)):
+                mini_retention = sorted(retention[i], reverse=True)
+                y_err = np.std(mini_retention, ddof=1)
+                labels.append(y_err)
+                line = plt.scatter(c0[i], mini_retention, lw=16)
+                scatter_line.append(line)
+                x_tick.append(c0[i][0])
+
+            plt.xticks(x_tick)
+
+            if kind == "null-TEMPO":
+                plt.title(cls.title_list[0][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "carboxyl-TEMPO":
+                plt.title(cls.title_list[1][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "amino-TEMPO":
+                plt.title(cls.title_list[2][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "null-QAS":
+                plt.title(cls.title_list[3][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "carboxyl-QAS":
+                plt.title(cls.title_list[4][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "amino-QAS":
+                plt.title(cls.title_list[5][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "TEMPO":
+                plt.title(cls.title_list[6][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "QAS":
+                plt.title(cls.title_list[7][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "TEMPO-null":
+                plt.title(cls.title_list[8][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "TEMPO-carboxyl":
+                plt.title(cls.title_list[9][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "TEMPO-amino":
+                plt.title(cls.title_list[10][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "QAS-null":
+                plt.title(cls.title_list[11][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "QAS-carboxyl":
+                plt.title(cls.title_list[12][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "QAS-amino":
+                plt.title(cls.title_list[13][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "null":
+                plt.title(cls.title_list[14][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "carboxyl":
+                plt.title(cls.title_list[15][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            elif kind == "amino":
+                plt.title(cls.title_list[16][key], fontdict={"family": "Microsoft YaHei", "size": 22})
+            else:
+                print("请输入正确信息！")
+                return
+
+            if kind in ["TEMPO-null", "TEMPO-carboxyl", "TEMPO-amino",
+                        "QAS-null", "QAS-carboxyl", "QAS-amino"]:
+                plt.xlabel("wt/wt(%)", size=22)
+            else:
+                plt.xlabel("ppm(mg/L)", size=22)
+            plt.ylabel("Retention rate(%)", size=22)
+
+            ax = plt.gca()  # 获得坐标轴的句柄
+            ax.xaxis.set_ticks_position('bottom')
+            ax.spines['bottom'].set_position(('data', 0))
+            ax.spines['bottom'].set_linewidth(1.5)  # 设置底部坐标轴的粗细
+            ax.spines['left'].set_linewidth(1.5)  # 设置左边坐标轴的粗细
+            ax.spines['right'].set_linewidth(1.5)  # 设置右边坐标轴的粗细
+            ax.spines['top'].set_linewidth(1.5)  #
+            plt.minorticks_on()
+            plt.tick_params(which='minor', direction='in', bottom=False, left=False, right=False, width=1, length=3)
+            plt.tick_params(direction='out', bottom=False, right=False, left=False, width=1, length=6, labelsize=22)
+            plt.ylim(0, 100)
+            plt.legend(scatter_line, labels=labels, loc=0, edgecolor='#000000', prop={'size': 22})
             if save:
                 plt.savefig(save)
             plt.show()
